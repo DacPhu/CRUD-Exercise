@@ -1,36 +1,14 @@
 const controller = {};
 const models = require("../models");
 
-// controller.show = async (req, res) => {
-//   const page = parseInt(req.params.page) || 1;
-//   const limit = 5;
-//   const skip = (page - 1) * limit;
-
-//   res.locals.users = await models.User.findAll({
-//     attributes: [
-//       "id",
-//       "imagePath",
-//       "username",
-//       "firstName",
-//       "lastName",
-//       "mobile",
-//       "isAdmin",
-//     ],
-//     order: [["createdAt", "DESC"]],
-//   });
-//   res.render("user-management");
-// };
-
 controller.show = async (req, res) => {
   const page = parseInt(req.query.page) || 1;
   const limit = 5;
   const offset = (page - 1) * limit;
 
   try {
-    // Fetch the total number of users for pagination
     const totalUsers = await models.User.count();
 
-    // Fetch the users with pagination
     const users = await models.User.findAll({
       attributes: [
         "id",
@@ -46,10 +24,8 @@ controller.show = async (req, res) => {
       offset: offset,
     });
 
-    // Calculate total pages
     const totalPages = Math.ceil(totalUsers / limit);
 
-    // Render the view with users and pagination data
     res.render("user-management", {
       users: users,
       totalUsers: totalUsers,
