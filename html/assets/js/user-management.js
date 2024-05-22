@@ -13,17 +13,16 @@ document
 function showEditUserModal(btn) {
   document.querySelector("#id").value = btn.dataset.id;
   document.querySelector("#usernameEdit").value = btn.dataset.username;
-  document.querySelector("#firstNameEdit").value = btn.dataset.first_name;
-  document.querySelector("#lastNameEdit").value = btn.dataset.last_name;
+  document.querySelector("#firstNameEdit").value = btn.dataset.firstName;
+  document.querySelector("#lastNameEdit").value = btn.dataset.lastName;
   document.querySelector("#mobileEdit").value = btn.dataset.mobile;
   document.querySelector("#isAdminEdit").checked =
-    btn.dataset.is_admin == "true" ? true : false;
+    btn.dataset.isAdmin == "true" ? true : false;
 }
 
 async function editUser(e) {
   e.preventDefault();
-
-  const formData = new FormData(document.getElementById("editUserForm"));
+  const formData = new FormData(document.querySelector("#editUserForm"));
   let data = Object.fromEntries(formData.entries());
 
   try {
@@ -34,7 +33,6 @@ async function editUser(e) {
       },
       body: JSON.stringify(data),
     });
-
     if (res.status == 200) {
       location.reload();
     } else {
@@ -42,7 +40,8 @@ async function editUser(e) {
       throw new Error(resText);
     }
   } catch (error) {
-    e.target.querySelector("#errorMessage").innerText = "Can not update user!";
+    e.target.querySelector("#errorMessage").innerText =
+      "Can not update user information";
     console.log(error);
   }
 }

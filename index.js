@@ -24,11 +24,20 @@ app.engine(
         });
       },
       showIndex: (index) => index + 1,
+      totalPagesArray: (totalPages) => {
+        return Array.from({ length: totalPages }, (_, i) => i + 1);
+      },
+      add: (a, b) => a + b,
+      subtract: (a, b) => a - b,
+      eq: (a, b) => a === b,
+      gt: (a, b) => a > b,
+      lt: (a, b) => a < b,
     },
   })
 );
 app.set("view engine", "hbs");
 
+app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
 app.get("/", (req, res) => res.redirect("/users"));
