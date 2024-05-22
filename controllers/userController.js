@@ -5,11 +5,26 @@ controller.show = async (req, res) => {
   const page = parseInt(req.query.page) || 1;
   const limit = 5;
   const offset = (page - 1) * limit;
+  const searchQuery = req.query.keyword ? req.query.keyword.trim() : "";
+
+  let whereClause = {};
+
+  if (searchQuery) {
+    whereClause = {
+      [models.Sequelize.Op.or]: [
+        { firstName: { [models.Sequelize.Op.like]: `%${searchQuery}%` } },
+        { lastName: { [models.Sequelize.Op.like]: `%${searchQuery}%` } },
+        { username: { [models.Sequelize.Op.like]: `%${searchQuery}%` } },
+        { mobile: { [models.Sequelize.Op.like]: `%${searchQuery}%` } },
+      ],
+    };
+  }
 
   try {
-    const totalUsers = await models.User.count();
+    const totalUsers = await models.User.count({ where: whereClause });
 
     const users = await models.User.findAll({
+      where: whereClause,
       attributes: [
         "id",
         "imagePath",
@@ -31,6 +46,7 @@ controller.show = async (req, res) => {
       totalUsers: totalUsers,
       totalPages: totalPages,
       currentPage: page,
+      keyword: searchQuery,
     });
   } catch (error) {
     console.error("Error fetching users:", error);

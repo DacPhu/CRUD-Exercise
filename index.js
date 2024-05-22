@@ -32,6 +32,9 @@ app.engine(
       eq: (a, b) => a === b,
       gt: (a, b) => a > b,
       lt: (a, b) => a < b,
+      appendKeyword: (keyword, page) => {
+        return keyword ? `?keyword=${keyword}&page=${page}` : `?page=${page}`;
+      },
     },
   })
 );
